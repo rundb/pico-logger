@@ -11,9 +11,15 @@ pico_sdk_init()
 
 # rest of your project
 add_executable(pico-logger
-    hello_world.c
+    main.c
+    hw_config.c
 )
 
-target_link_libraries(pico-logger pico_stdlib)
+add_subdirectory(lib/FatFs_SPI)
+
+target_link_libraries(pico-logger 
+    pico_stdlib
+    FatFs_SPI
+)
 
 pico_add_extra_outputs(pico-logger)
