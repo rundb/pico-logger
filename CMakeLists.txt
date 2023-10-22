@@ -14,6 +14,6 @@ add_executable(pico-logger
     hello_world.c
 )
 
-target_link_libraries(pico-clogger pico_stdlib)
+target_link_libraries(pico-logger pico_stdlib)
 
-pico_add_extra_output(pico-logger)
+pico_add_extra_outputs(pico-logger)
