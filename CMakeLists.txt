@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 
-# initialize the SDK based on PICO_SDK_PATH
-# note: this must happen before project()
 include(pico_sdk_import.cmake)
+
+set(FREERTOS_KERNEL_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/freertos)
+include(FreeRTOS_Kernel_import.cmake)
 
 project(pico-logger)
 
@@ -11,15 +12,23 @@ pico_sdk_init()
 
 # rest of your project
 add_executable(pico-logger
-    main.c
+    main.cpp
     hw_config.c
+    tasks/sdcard_task.cpp
 )
 
 add_subdirectory(lib/FatFs_SPI)
 
+target_include_directories(pico-logger PRIVATE
+    tasks
+    config
+)
+
 target_link_libraries(pico-logger 
     pico_stdlib
     FatFs_SPI
+    FreeRTOS-Kernel
+    FreeRTOS-Kernel-Heap1
 )
 
 pico_add_extra_outputs(pico-logger)

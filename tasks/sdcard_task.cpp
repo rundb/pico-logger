@@ -1,19 +1,20 @@
-#include <stdio.h>
-//
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "f_util.h"
 #include "ff.h"
-#include "pico/stdlib.h"
-#include "rtc.h"
-#include "pico/stdio_uart.h"
-//
+
+#include <stdio.h>
+
+#include "sdcard_task.h"
+#include "sd_card.h"
 #include "hw_config.h"
 
-int main() {
-    // stdio_init_all();
-    stdio_uart_init_full(uart1, 115200, 20, 21);
-    time_init();
+MemoryContext * _context{nullptr};
 
-    puts("Hello, world!");
+void sdcard_thread(void *context)
+{
+    _context = (MemoryContext *) context;
 
     // See FatFs - Generic FAT Filesystem Module, "Application Interface",
     // http://elm-chan.org/fsw/ff/00index_e.html
@@ -34,6 +35,13 @@ int main() {
     }
     f_unmount(pSD->pcName);
 
-    puts("Goodbye, world!");
-    for (;;);
+    printf("starting sdcard task loop");
+    while(1) 
+    {
+        // check commands queue
+
+        // check data queue
+
+        vTaskDelay(1000);
+    }
 }
