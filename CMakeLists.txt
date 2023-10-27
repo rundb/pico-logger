@@ -22,8 +22,6 @@ add_subdirectory(lib/FatFs_SPI)
 target_include_directories(pico-logger PRIVATE
     tasks
     config
-    lib/CMSIS_5/CMSIS/DAP/Firmware/Include/
-    lib/CMSIS_5/CMSIS/Core/Include/
 )
 
 
