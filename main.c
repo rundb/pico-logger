@@ -4,11 +4,13 @@
 #include "ff.h"
 #include "pico/stdlib.h"
 #include "rtc.h"
+#include "pico/stdio_uart.h"
 //
 #include "hw_config.h"
 
 int main() {
-    stdio_init_all();
+    // stdio_init_all();
+    stdio_uart_init_full(uart1, 115200, 20, 21);
     time_init();
 
     puts("Hello, world!");
