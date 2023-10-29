@@ -21,6 +21,7 @@ void sdcard_thread(void *context)
     _context = (MemoryContext *) context;
 
     DutRxData rx_data_buffer;
+    CommandToSdCardQueueElement cmd_buffer;
 
     printf("task sdcard: start");
 
@@ -54,6 +55,15 @@ void sdcard_thread(void *context)
     while(1) 
     {
         // check commands queue
+        const auto cmd_rx_result = xQueueReceive(
+            _context->command_handle,
+            reinterpret_cast<void*>(&cmd_buffer),
+            0
+        );
+        if (pdPASS != cmd_rx_result)
+        {
+            printf("sd card: received cmd %d", cmd_buffer.command);
+        }
 
         // check data queue
         const auto dut_data_rx_result = xQueueReceive(
