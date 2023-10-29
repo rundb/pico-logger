@@ -22,19 +22,29 @@
 #define STDIO_UART_RX_PIN (21)
 #define STDIO_UART_BAUDRATE (115200)
 
+#define DUT_UART_DATA_QUEUE_DEPTH (3)
+
 MemoryContext memory_context;
 DutUartContext dut_context;
 
 TaskHandle_t sdcard_task_handle;
 TaskHandle_t dut_task_handle;
-StackType_t sdcard_stack[SDCARD_STACK_SIZE] {0UL};
+
+QueueHandle_t dut_uart_data_queue;
+QueueHandle_t memory_cmd_queue;
 
 int main() {
     // stdio_init_all();
     stdio_uart_init_full(uart1, STDIO_UART_BAUDRATE, STDIO_UART_TX_PIN, STDIO_UART_RX_PIN);
     time_init();
 
-    // puts("Hello, world!");
+    dut_uart_data_queue = xQueueCreate(DUT_UART_DATA_QUEUE_DEPTH, sizeof(DutRxData));
+    if (dut_uart_data_queue == 0)
+    {
+        printf("failed to create dut rx data queue\n");
+    }
+
+    memory_context.data_handle = dut_uart_data_queue;
 
     const auto sdcard_task_result = xTaskCreate(
         sdcard_thread,
@@ -48,6 +58,8 @@ int main() {
     {
         printf("failed to create task sdcard, result=%d\n");
     }
+
+    dut_context.rx_data_handle = dut_uart_data_queue;
 
     const auto dut_task_result = xTaskCreate(
         dut_uart_task,

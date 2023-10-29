@@ -10,11 +10,17 @@
 #include "sd_card.h"
 #include "hw_config.h"
 
+#include "dut_uart_task.h"
+
+#define DUT_DATA_WAIT_TICKS (pdMS_TO_TICKS(10))
+
 MemoryContext * _context{nullptr};
 
 void sdcard_thread(void *context)
 {
     _context = (MemoryContext *) context;
+
+    DutRxData rx_data_buffer;
 
     printf("task sdcard: start");
 
@@ -50,8 +56,21 @@ void sdcard_thread(void *context)
         // check commands queue
 
         // check data queue
-
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        printf("sdc: alive\n");
+        const auto dut_data_rx_result = xQueueReceive(
+            _context->data_handle, 
+            reinterpret_cast<void*>(&rx_data_buffer),
+            DUT_DATA_WAIT_TICKS);
+        if (pdPASS == dut_data_rx_result)
+        {
+            if (rx_data_buffer.size >= DUT_RX_DATA_MAX_DATA_SIZE)
+            {
+                
+            }
+            else 
+            {
+                rx_data_buffer.data[rx_data_buffer.size+1] = '\0';
+                printf("%s", rx_data_buffer.data);
+            }
+        }
     }
 }
