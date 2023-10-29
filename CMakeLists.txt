@@ -15,6 +15,7 @@ add_executable(pico-logger
     main.cpp
     hw_config.c
     tasks/sdcard_task.cpp
+    tasks/dut_uart_task.cpp
 )
 
 add_subdirectory(lib/FatFs_SPI)

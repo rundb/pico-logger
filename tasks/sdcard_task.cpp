@@ -16,7 +16,7 @@ void sdcard_thread(void *context)
 {
     _context = (MemoryContext *) context;
 
-    printf("sdcard start");
+    printf("task sdcard: start");
 
     // See FatFs - Generic FAT Filesystem Module, "Application Interface",
     // http://elm-chan.org/fsw/ff/00index_e.html
@@ -51,6 +51,7 @@ void sdcard_thread(void *context)
 
         // check data queue
 
-        vTaskDelay(1000);
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        printf("sdc: alive\n");
     }
 }
