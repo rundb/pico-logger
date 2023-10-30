@@ -87,6 +87,7 @@ int main() {
         printf("failed to create task dut, result=%d\n");
     }
 
+    btn_led_context.command_handle = memory_cmd_queue;
     const auto btn_led_task_result = xTaskCreate(
         button_led_task,
         "LED",

@@ -60,9 +60,9 @@ void sdcard_thread(void *context)
             reinterpret_cast<void*>(&cmd_buffer),
             0
         );
-        if (pdPASS != cmd_rx_result)
+        if (pdPASS == cmd_rx_result)
         {
-            printf("sd card: received cmd %d", cmd_buffer.command);
+            printf("sd card: received cmd %d\n", cmd_buffer.command);
         }
 
         // check data queue
